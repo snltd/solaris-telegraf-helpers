@@ -1,6 +1,6 @@
 // Do Solaris/SmartOS stuff to help with my Telegraf collectors.
 // Mostly wrapper methods to make life a little simpler.
-package sunos_telegraf_helpers
+package solaris_telegraf_helpers
 
 import (
 	"fmt"

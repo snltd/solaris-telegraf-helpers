@@ -1,4 +1,4 @@
-module github.com/snltd/sunos_telegraf_helpers
+module github.com/snltd/solaris-telegraf-helpers
 
 go 1.15
 

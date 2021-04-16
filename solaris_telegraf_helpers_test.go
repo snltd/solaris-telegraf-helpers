@@ -1,9 +1,9 @@
-package sunos_telegraf_helpers_test
+package solaris_telegraf_helpers_test
 
 import (
-	sh "github.com/snltd/sunos_telegraf_helpers"
+	sh "github.com/snltd/solaris-telegraf-helpers"
 	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/mock"
+	//"github.com/stretchr/testify/mock"
 	"testing"
 )
 
