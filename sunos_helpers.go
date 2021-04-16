@@ -1,6 +1,6 @@
 // Do Solaris/SmartOS stuff to help with my Telegraf collectors.
 // Mostly wrapper methods to make life a little simpler.
-package sunos_helpers
+package sunos_telegraf_helpers
 
 import (
 	"fmt"
@@ -13,9 +13,9 @@ import (
 	"strings"
 )
 
-// Run a command, returning output as a string. Commands are
-// specified as a simple string. You can't do pipes and stuff
-// because of the way Go forks.
+// RunCmd runs a command, returning output as a string, and IGNORING RETURN CODE AND STDERR!
+// Commands are specified as a simple string.  You can't do pipes and stuff because of the way Go
+// forks.
 func RunCmd(cmd_str string) string {
 	chunks := strings.SplitN(cmd_str, " ", 2)
 
@@ -32,7 +32,8 @@ func RunCmd(cmd_str string) string {
 	return strings.TrimSpace(string(p))
 }
 
-// Run a command via pfexec(1), returning its output as a string.
+// RunCmdPfexec runs a command via pfexec(1), returning its output as a string. Same caveats as
+// RunCmd()
 func RunCmdPfexec(cmd_str string) string {
 	return RunCmd("pfexec " + cmd_str)
 }

@@ -1,13 +1,23 @@
-package sunos_helpers_test
+package sunos_telegraf_helpers_test
 
 import (
+	sh "github.com/snltd/sunos_telegraf_helpers"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
 	"testing"
-	"github.com/snltd/sunos_helpers"
 )
+
+func TestRunCmd(t *testing.T) {
+	echoOutput := sh.RunCmd("/bin/echo something")
+	assert.Equal(t, "something", echoOutput)
+
+	nosuch := sh.RunCmd("/bin/no_such_command")
+	assert.Equal(t, "", nosuch)
+}
 
 func TestBytify(t *testing.T) {
 	tables := []struct {
-		in string
+		in  string
 		out float64
 	}{
 		{"-", 0},
@@ -21,17 +31,14 @@ func TestBytify(t *testing.T) {
 	}
 
 	for _, table := range tables {
-		calc, _ := sunos_helpers.Bytify(table.in)
-
-		if calc != table.out {
-			t.Errorf("Expected %d, got %d", table.out, calc)
-		}
+		result, _ := sh.Bytify(table.in)
+		assert.Equal(t, table.out, result)
 	}
 }
 
 func TestBytify_t(t *testing.T) {
 	tables := []struct {
-		in string
+		in  string
 		out float64
 	}{
 		{"-", 0},
@@ -45,10 +52,7 @@ func TestBytify_t(t *testing.T) {
 	}
 
 	for _, table := range tables {
-		calc, _ := sunos_helpers.Bytify_t(table.in)
-
-		if calc != table.out {
-			t.Errorf("Expected %d, got %d", table.out, calc)
-		}
+		result, _ := sh.Bytify_t(table.in)
+		assert.Equal(t, table.out, result)
 	}
 }
