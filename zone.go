@@ -1,6 +1,7 @@
 package solaris_telegraf_helpers
 
 import (
+	"fmt"
 	"strconv"
 	"strings"
 )
@@ -34,6 +35,17 @@ func (z ZoneMap) Names() []string {
 	}
 
 	return zones
+}
+
+// ZoneByID returns the zone with the given ID
+func (z ZoneMap) ZoneByID(id int) (zone, error) {
+	for _, zone := range z {
+		if zone.ID == id {
+			return zone, nil
+		}
+	}
+
+	return zone{}, fmt.Errorf("no zone with ID %d", id)
 }
 
 // Names returns a list of zones in the map

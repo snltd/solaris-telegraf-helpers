@@ -70,6 +70,31 @@ func TestParseZones(t *testing.T) {
 	)
 }
 
+func TestZoneByID(t *testing.T) {
+	zoneMap := ParseZones(zoneadmOutput)
+	assert.ElementsMatch(t, []string{"global", "cube-media", "cube-ws"}, zoneMap.Names())
+
+	zoneData, err := zoneMap.ZoneByID(42)
+
+	assert.Nil(t, err)
+	assert.Equal(
+		t,
+		zone{
+			42,
+			"cube-media",
+			"running",
+			"/zones/cube-media",
+			"c624d04f-d0d9-e1e6-822e-acebc78ec9ff",
+			"lipkg",
+			"excl",
+			128,
+		},
+		zoneData)
+
+	zoneData, err = zoneMap.ZoneByID(101)
+	assert.Error(t, err)
+}
+
 var zoneadmOutput = `0:global:running:/::ipkg:shared:0
 42:cube-media:running:/zones/cube-media:c624d04f-d0d9-e1e6-822e-acebc78ec9ff:lipkg:excl:128
 44:cube-ws:installed:/zones/cube-ws:0f9c56f4-9810-6d45-f801-d34bf27cc13f:pkgsrc:excl:179`
