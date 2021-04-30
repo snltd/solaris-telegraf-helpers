@@ -4,6 +4,7 @@ import (
 	"math"
 	"regexp"
 	"strconv"
+	"strings"
 )
 
 // Bytify takes a number with an ISO suffix and returns the bytes in that number as a float.
@@ -36,13 +37,17 @@ func bytifyCalc(size string, multiplier float64) (float64, error) {
 	var exponent float64
 
 	for i, v := range sizes {
-		if v == matches[0][2] {
+		if strings.ToLower(v) == strings.ToLower(matches[0][2]) {
 			exponent = float64(i)
 			break
 		}
 	}
 
-	base, _ := strconv.ParseFloat(matches[0][1], 64)
+	base, err := strconv.ParseFloat(matches[0][1], 64)
+
+	if err != nil {
+		return 0, err
+	}
 
 	return (base * (math.Pow(multiplier, exponent))), nil
 }
