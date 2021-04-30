@@ -80,19 +80,47 @@ func TestZoneByID(t *testing.T) {
 	assert.Equal(
 		t,
 		zone{
-			42,
-			"cube-media",
-			"running",
-			"/zones/cube-media",
-			"c624d04f-d0d9-e1e6-822e-acebc78ec9ff",
-			"lipkg",
-			"excl",
-			128,
+			ID:      42,
+			Name:    "cube-media",
+			Status:  "running",
+			Path:    "/zones/cube-media",
+			Uuid:    "c624d04f-d0d9-e1e6-822e-acebc78ec9ff",
+			Brand:   "lipkg",
+			IpType:  "excl",
+			DebugID: 128,
 		},
 		zoneData)
 
 	zoneData, err = zoneMap.ZoneByID(101)
 	assert.Error(t, err)
+}
+
+func TestParseZoneVnics(t *testing.T) {
+	assert.Equal(
+		t,
+		ZoneVnicMap{
+			"www_records0": vnic{
+				Name:  "www_records0",
+				Zone:  "cube-www-records",
+				Link:  "rge0",
+				Speed: 1000,
+			},
+		},
+		ParseZoneVnics("www_records0:cube-www-records:rge0:1000"),
+	)
+}
+
+func TestParseZoneVnic(t *testing.T) {
+	assert.Equal(
+		t,
+		vnic{
+			Name:  "www_records0",
+			Zone:  "cube-www-records",
+			Link:  "rge0",
+			Speed: 1000,
+		},
+		parseZoneVnic("www_records0:cube-www-records:rge0:1000"),
+	)
 }
 
 var zoneadmOutput = `0:global:running:/::ipkg:shared:0

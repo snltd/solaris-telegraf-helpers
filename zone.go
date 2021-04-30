@@ -17,13 +17,28 @@ type zone struct {
 	DebugID int
 }
 
+type vnic struct {
+	Name  string
+	Zone  string
+	Link  string
+	Speed int
+}
+
 // ZoneMap maps the name of a zone to a zone struct containing all its zoneadm properties
 type ZoneMap map[string]zone
+
+// ZoneVnicMap maps a VNIC name to a vnic struct which explains it
+type ZoneVnicMap map[string]vnic
 
 // NewZoneMap creates a ZoneMap describing the current state of the system
 func NewZoneMap() ZoneMap {
 	raw := RunCmd("/usr/sbin/zoneadm list -cp")
 	return ParseZones(raw)
+}
+
+func NewZoneVnicMap() ZoneVnicMap {
+	raw := RunCmd("/usr/sbin/dladm show-vnic -po link,zone,over,speed")
+	return ParseZoneVnics(raw)
 }
 
 // Names returns a list of zones in the map
@@ -97,5 +112,29 @@ func parseZone(raw string) zone {
 		chunks[5],
 		chunks[6],
 		debugID,
+	}
+}
+
+func ParseZoneVnics(raw string) ZoneVnicMap {
+	rawVnics := strings.Split(raw, "\n")
+	ret := ZoneVnicMap{}
+
+	for _, rawVnic := range rawVnics {
+		vnic := parseZoneVnic(rawVnic)
+		ret[vnic.Name] = vnic
+	}
+
+	return ret
+}
+
+func parseZoneVnic(raw string) vnic {
+	chunks := strings.Split(raw, ":")
+	speed, _ := strconv.Atoi(chunks[3])
+
+	return vnic{
+		chunks[0],
+		chunks[1],
+		chunks[2],
+		speed,
 	}
 }
