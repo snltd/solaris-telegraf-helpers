@@ -17,14 +17,15 @@ func KstatIoClass(token *kstat.Token, class string) map[string]*kstat.IO {
 			continue
 		}
 
-		name := n.Name
 		stat, err := n.GetIO()
 
 		if err != nil {
 			log.Fatal("cannot get kstat")
 		}
 
-		ret[name] = stat
+		key := fmt.Sprintf("%s:%s", n.Module, n.Name)
+
+		ret[key] = stat
 	}
 
 	return ret
