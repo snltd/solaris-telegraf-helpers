@@ -1,6 +1,7 @@
 package solaris_telegraf_helpers
 
 import (
+	"errors"
 	"fmt"
 	"strconv"
 	"strings"
@@ -88,8 +89,11 @@ func ParseZones(raw string) ZoneMap {
 	ret := ZoneMap{}
 
 	for _, rawZone := range rawZones {
-		zone := parseZone(rawZone)
-		ret[zone.Name] = zone
+		zone, err := parseZone(rawZone)
+
+		if err == nil {
+			ret[zone.Name] = zone
+		}
 	}
 
 	return ret
@@ -98,8 +102,13 @@ func ParseZones(raw string) ZoneMap {
 // parseZone turns a line of raw `zoneadm list -p` output into a zone struct. The format of such a
 // line is
 // zoneid:zonename:state:zonepath:uuid:brand:ip-type:debugid
-func parseZone(raw string) zone {
+func parseZone(raw string) (zone, error) {
 	chunks := strings.Split(raw, ":")
+
+	if len(chunks) != 8 {
+		return zone{}, errors.New(fmt.Sprintf("found %d fields", len(chunks)))
+	}
+
 	zoneID, _ := strconv.Atoi(chunks[0])
 	debugID, _ := strconv.Atoi(chunks[7])
 
@@ -112,7 +121,7 @@ func parseZone(raw string) zone {
 		chunks[5],
 		chunks[6],
 		debugID,
-	}
+	}, nil
 }
 
 func ParseZoneVnics(raw string) ZoneVnicMap {

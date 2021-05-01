@@ -18,12 +18,20 @@ func TestZoneMapRunning(t *testing.T) {
 }
 
 func TestParseZone(t *testing.T) {
+	result, err := parseZone("0:global:running:/::ipkg:shared:0")
+	assert.Nil(t, err)
+
 	assert.Equal(
 		t,
 		zone{0, "global", "running", "/", "", "ipkg", "shared", 0},
-		parseZone("0:global:running:/::ipkg:shared:0"),
+		result,
 	)
 
+	result, err = parseZone(
+		"42:mz1:running:/zones/mz1:c624d04f-d0d9-e1e6-822e-acebc78ec9ff:lipkg:excl:128",
+	)
+
+	assert.Nil(t, err)
 	assert.Equal(
 		t,
 		zone{
@@ -36,8 +44,12 @@ func TestParseZone(t *testing.T) {
 			"excl",
 			128,
 		},
-		parseZone("42:mz1:running:/zones/mz1:c624d04f-d0d9-e1e6-822e-acebc78ec9ff:lipkg:excl:128"),
+		result,
 	)
+
+	result, err = parseZone("some:random:string")
+	assert.Equal(t, zone{}, result)
+	assert.Error(t, err)
 }
 
 func TestParseZones(t *testing.T) {
