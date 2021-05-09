@@ -37,7 +37,7 @@ func bytifyCalc(size string, multiplier float64) (float64, error) {
 	var exponent float64
 
 	for i, v := range sizes {
-		if strings.ToLower(v) == strings.ToLower(matches[0][2]) {
+		if strings.EqualFold(v, matches[0][2]) {
 			exponent = float64(i)
 			break
 		}

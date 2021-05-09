@@ -25,7 +25,13 @@ func main() {
 	var buf bytes.Buffer
 
 	enc := gob.NewEncoder(&buf)
-	enc.Encode(stats)
+	err = enc.Encode(stats)
+
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Could not encode data %v\n", err)
+		os.Exit(1)
+	}
+
 	err = ioutil.WriteFile("all.kstat", buf.Bytes(), 0644)
 
 	if err != nil {

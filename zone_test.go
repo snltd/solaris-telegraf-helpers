@@ -103,7 +103,7 @@ func TestZoneByID(t *testing.T) {
 		},
 		zoneData)
 
-	zoneData, err = zoneMap.ZoneByID(101)
+	_, err = zoneMap.ZoneByID(101)
 	assert.Error(t, err)
 }
 

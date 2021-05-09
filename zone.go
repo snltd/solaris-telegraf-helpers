@@ -1,7 +1,6 @@
 package solaris_telegraf_helpers
 
 import (
-	"errors"
 	"fmt"
 	"strconv"
 	"strings"
@@ -106,7 +105,7 @@ func parseZone(raw string) (zone, error) {
 	chunks := strings.Split(raw, ":")
 
 	if len(chunks) != 8 {
-		return zone{}, errors.New(fmt.Sprintf("found %d fields", len(chunks)))
+		return zone{}, fmt.Errorf("found %d fields", len(chunks))
 	}
 
 	zoneID, _ := strconv.Atoi(chunks[0])
