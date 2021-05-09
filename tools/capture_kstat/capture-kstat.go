@@ -2,7 +2,7 @@ package main
 
 // Serializes all Named kstats under the given path, to disk. Useful for generating fixture data
 // to mock out tests which require kstats.
-// The data is of type []*kstat.Named
+// The data is of type []*kstat.Named, the filename is the kstat name with `.kstat` appended.
 
 import (
 	"bytes"
@@ -16,13 +16,13 @@ import (
 )
 
 func main() {
-	if len(os.Args) != 3 {
-		fmt.Fprintln(os.Stderr, "usage: capture-kstat <kstat> <file>")
+	if len(os.Args) != 2 {
+		fmt.Fprintln(os.Stderr, "usage: capture-kstat <kstat>")
 		os.Exit(1)
 	}
 
 	kstatName := os.Args[1]
-	file := os.Args[2]
+	file := fmt.Sprintf("%s.kstat", kstatName)
 	chunks := strings.Split(kstatName, ":")
 
 	if len(chunks) != 3 {
