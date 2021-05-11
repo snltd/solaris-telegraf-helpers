@@ -52,7 +52,7 @@ func TestKStatsInModule(t *testing.T) {
 
 func allKStatsFromFixtures() []*kstat.KStat {
 	var kstatData []*kstat.KStat
-	raw, err := os.Open("fixtures/all.kstat")
+	raw, err := os.Open("testdata/all.kstat")
 
 	if err != nil {
 		log.Fatal(fmt.Sprintf("Could not load serialized data from disk: %v\n", err))

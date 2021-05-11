@@ -17,7 +17,7 @@ type zone struct {
 	DebugID int
 }
 
-type vnic struct {
+type Vnic struct {
 	Name  string
 	Zone  string
 	Link  string
@@ -28,7 +28,7 @@ type vnic struct {
 type ZoneMap map[string]zone
 
 // ZoneVnicMap maps a VNIC name to a vnic struct which explains it
-type ZoneVnicMap map[string]vnic
+type ZoneVnicMap map[string]Vnic
 
 // NewZoneMap creates a ZoneMap describing the current state of the system
 func NewZoneMap() ZoneMap {
@@ -135,11 +135,11 @@ func ParseZoneVnics(raw string) ZoneVnicMap {
 	return ret
 }
 
-func parseZoneVnic(raw string) vnic {
+func parseZoneVnic(raw string) Vnic {
 	chunks := strings.Split(raw, ":")
 	speed, _ := strconv.Atoi(chunks[3])
 
-	return vnic{
+	return Vnic{
 		chunks[0],
 		chunks[1],
 		chunks[2],

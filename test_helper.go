@@ -10,10 +10,10 @@ import (
 )
 
 // FromFixture loads serialized kstat data off disk and returns the real data. The filename is
-// relative to fixtures/
+// relative to testdata/.
 func FromFixture(filename string) []*kstat.Named {
 	var kstatData []*kstat.Named
-	filename = filepath.Join("fixtures", filename)
+	filename = filepath.Join("testdata", filename)
 
 	raw, err := os.Open(filename)
 
