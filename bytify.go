@@ -39,12 +39,12 @@ func bytifyCalc(size string, multiplier float64) (float64, error) {
 	for i, v := range sizes {
 		if strings.EqualFold(v, matches[0][2]) {
 			exponent = float64(i)
+
 			break
 		}
 	}
 
 	base, err := strconv.ParseFloat(matches[0][1], 64)
-
 	if err != nil {
 		return 0, err
 	}

@@ -3,20 +3,20 @@ package solaris_telegraf_helpers
 import (
 	"encoding/gob"
 	"fmt"
-	"github.com/siebenmann/go-kstat"
 	"log"
 	"os"
 	"path/filepath"
+
+	"github.com/siebenmann/go-kstat"
 )
 
 // FromFixture loads serialized kstat data off disk and returns the real data. The filename is
 // relative to testdata/.
 func FromFixture(filename string) []*kstat.Named {
 	var kstatData []*kstat.Named
+
 	filename = filepath.Join("testdata", filename)
-
 	raw, err := os.Open(filename)
-
 	if err != nil {
 		log.Fatal(fmt.Sprintf("Could not load serialized data from disk: %v\n", err))
 	}

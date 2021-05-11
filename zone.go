@@ -6,14 +6,14 @@ import (
 	"strings"
 )
 
-type zone struct {
+type Zone struct {
 	ID      int
 	Name    string
 	Status  string
 	Path    string
-	Uuid    string
+	UUID    string
 	Brand   string
-	IpType  string
+	IPType  string
 	DebugID int
 }
 
@@ -24,24 +24,26 @@ type Vnic struct {
 	Speed int
 }
 
-// ZoneMap maps the name of a zone to a zone struct containing all its zoneadm properties
-type ZoneMap map[string]zone
+// ZoneMap maps the name of a zone to a zone struct containing all its zoneadm properties.
+type ZoneMap map[string]Zone
 
-// ZoneVnicMap maps a VNIC name to a vnic struct which explains it
+// ZoneVnicMap maps a VNIC name to a vnic struct which explains it.
 type ZoneVnicMap map[string]Vnic
 
-// NewZoneMap creates a ZoneMap describing the current state of the system
+// NewZoneMap creates a ZoneMap describing the current state of the system.
 func NewZoneMap() ZoneMap {
 	raw := RunCmd("/usr/sbin/zoneadm list -cp")
+
 	return ParseZones(raw)
 }
 
 func NewZoneVnicMap() ZoneVnicMap {
 	raw := RunCmd("/usr/sbin/dladm show-vnic -po link,zone,over,speed")
+
 	return ParseZoneVnics(raw)
 }
 
-// Names returns a list of zones in the map
+// Names returns a list of zones in the map.
 func (z ZoneMap) Names() []string {
 	zones := []string{}
 
@@ -52,18 +54,18 @@ func (z ZoneMap) Names() []string {
 	return zones
 }
 
-// ZoneByID returns the zone with the given ID
-func (z ZoneMap) ZoneByID(id int) (zone, error) {
+// ZoneByID returns the zone with the given ID.
+func (z ZoneMap) ZoneByID(id int) (Zone, error) {
 	for _, zone := range z {
 		if zone.ID == id {
 			return zone, nil
 		}
 	}
 
-	return zone{}, fmt.Errorf("no zone with ID %d", id)
+	return Zone{}, fmt.Errorf("no zone with ID %d", id)
 }
 
-// Names returns a list of zones in the map
+// Names returns a list of zones in the map.
 func (z ZoneMap) InState(state string) []string {
 	zones := []string{}
 
@@ -76,13 +78,13 @@ func (z ZoneMap) InState(state string) []string {
 	return zones
 }
 
-// ZoneName returns the name of the current zone
+// ZoneName returns the name of the current zone.
 func ZoneName() string {
 	return RunCmd("/bin/zonename")
 }
 
 // ParseZones turns a chunk of raw `zoneadm list -p` output into a ZoneMap. It is public so
-// Telegraf tests can use it
+// Telegraf tests can use it.
 func ParseZones(raw string) ZoneMap {
 	rawZones := strings.Split(raw, "\n")
 	ret := ZoneMap{}
@@ -99,19 +101,18 @@ func ParseZones(raw string) ZoneMap {
 }
 
 // parseZone turns a line of raw `zoneadm list -p` output into a zone struct. The format of such a
-// line is
-// zoneid:zonename:state:zonepath:uuid:brand:ip-type:debugid
-func parseZone(raw string) (zone, error) {
+// line is zoneid:zonename:state:zonepath:uuid:brand:ip-type:debugid.
+func parseZone(raw string) (Zone, error) {
 	chunks := strings.Split(raw, ":")
 
-	if len(chunks) != 8 {
-		return zone{}, fmt.Errorf("found %d fields", len(chunks))
+	if len(chunks) != 8 { //nolint
+		return Zone{}, fmt.Errorf("found %d fields", len(chunks))
 	}
 
 	zoneID, _ := strconv.Atoi(chunks[0])
 	debugID, _ := strconv.Atoi(chunks[7])
 
-	return zone{
+	return Zone{
 		zoneID,
 		chunks[1],
 		chunks[2],

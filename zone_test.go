@@ -1,16 +1,21 @@
 package solaris_telegraf_helpers
 
 import (
-	"github.com/stretchr/testify/assert"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestZoneMapNames(t *testing.T) {
+	t.Parallel()
+
 	zoneMap := ParseZones(zoneadmOutput)
 	assert.ElementsMatch(t, []string{"global", "cube-media", "cube-ws"}, zoneMap.Names())
 }
 
 func TestZoneMapRunning(t *testing.T) {
+	t.Parallel()
+
 	zoneMap := ParseZones(zoneadmOutput)
 	assert.ElementsMatch(t, []string{"global", "cube-media"}, zoneMap.InState("running"))
 	assert.ElementsMatch(t, []string{"cube-ws"}, zoneMap.InState("installed"))
@@ -18,12 +23,14 @@ func TestZoneMapRunning(t *testing.T) {
 }
 
 func TestParseZone(t *testing.T) {
+	t.Parallel()
+
 	result, err := parseZone("0:global:running:/::ipkg:shared:0")
 	assert.Nil(t, err)
 
 	assert.Equal(
 		t,
-		zone{0, "global", "running", "/", "", "ipkg", "shared", 0},
+		Zone{0, "global", "running", "/", "", "ipkg", "shared", 0},
 		result,
 	)
 
@@ -34,7 +41,7 @@ func TestParseZone(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(
 		t,
-		zone{
+		Zone{
 			42,
 			"mz1",
 			"running",
@@ -48,16 +55,19 @@ func TestParseZone(t *testing.T) {
 	)
 
 	result, err = parseZone("some:random:string")
-	assert.Equal(t, zone{}, result)
+
+	assert.Equal(t, Zone{}, result)
 	assert.Error(t, err)
 }
 
 func TestParseZones(t *testing.T) {
+	t.Parallel()
+
 	assert.Equal(
 		t,
 		ZoneMap{
-			"global": zone{0, "global", "running", "/", "", "ipkg", "shared", 0},
-			"cube-media": zone{
+			"global": Zone{0, "global", "running", "/", "", "ipkg", "shared", 0},
+			"cube-media": Zone{
 				42,
 				"cube-media",
 				"running",
@@ -67,7 +77,7 @@ func TestParseZones(t *testing.T) {
 				"excl",
 				128,
 			},
-			"cube-ws": zone{
+			"cube-ws": Zone{
 				44,
 				"cube-ws",
 				"installed",
@@ -83,6 +93,8 @@ func TestParseZones(t *testing.T) {
 }
 
 func TestZoneByID(t *testing.T) {
+	t.Parallel()
+
 	zoneMap := ParseZones(zoneadmOutput)
 	assert.ElementsMatch(t, []string{"global", "cube-media", "cube-ws"}, zoneMap.Names())
 
@@ -91,14 +103,14 @@ func TestZoneByID(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(
 		t,
-		zone{
+		Zone{
 			ID:      42,
 			Name:    "cube-media",
 			Status:  "running",
 			Path:    "/zones/cube-media",
-			Uuid:    "c624d04f-d0d9-e1e6-822e-acebc78ec9ff",
+			UUID:    "c624d04f-d0d9-e1e6-822e-acebc78ec9ff",
 			Brand:   "lipkg",
-			IpType:  "excl",
+			IPType:  "excl",
 			DebugID: 128,
 		},
 		zoneData)
@@ -108,10 +120,12 @@ func TestZoneByID(t *testing.T) {
 }
 
 func TestParseZoneVnics(t *testing.T) {
+	t.Parallel()
+
 	assert.Equal(
 		t,
 		ZoneVnicMap{
-			"www_records0": vnic{
+			"www_records0": Vnic{
 				Name:  "www_records0",
 				Zone:  "cube-www-records",
 				Link:  "rge0",
@@ -123,9 +137,11 @@ func TestParseZoneVnics(t *testing.T) {
 }
 
 func TestParseZoneVnic(t *testing.T) {
+	t.Parallel()
+
 	assert.Equal(
 		t,
-		vnic{
+		Vnic{
 			Name:  "www_records0",
 			Zone:  "cube-www-records",
 			Link:  "rge0",

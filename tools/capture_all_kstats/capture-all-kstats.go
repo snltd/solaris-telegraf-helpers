@@ -7,14 +7,14 @@ import (
 	"bytes"
 	"encoding/gob"
 	"fmt"
-	"github.com/siebenmann/go-kstat"
 	"io/ioutil"
 	"os"
+
+	"github.com/siebenmann/go-kstat"
 )
 
 func main() {
 	token, err := kstat.Open()
-
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "Cannot get kstat token.")
 	}
@@ -32,7 +32,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	err = ioutil.WriteFile("all.kstat", buf.Bytes(), 0644)
+	err = ioutil.WriteFile("all.kstat", buf.Bytes(), 0o644) //nolint
 
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Could not write serialized data to disk: %v\n", err)

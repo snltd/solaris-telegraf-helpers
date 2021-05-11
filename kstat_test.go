@@ -1,18 +1,19 @@
 package solaris_telegraf_helpers
 
 import (
-	//"fmt"
-	//sth "github.com/snltd/solaris-telegraf-helpers"
 	"encoding/gob"
 	"fmt"
-	"github.com/siebenmann/go-kstat"
-	"github.com/stretchr/testify/assert"
 	"log"
 	"os"
 	"testing"
+
+	"github.com/siebenmann/go-kstat"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestKStatsInClass(t *testing.T) {
+	t.Parallel()
+
 	allKStats = func(token *kstat.Token) []*kstat.KStat {
 		return allKStatsFromFixtures()
 	}
@@ -33,6 +34,8 @@ func TestKStatsInClass(t *testing.T) {
 }
 
 func TestKStatsInModule(t *testing.T) {
+	t.Parallel()
+
 	allKStats = func(token *kstat.Token) []*kstat.KStat {
 		return allKStatsFromFixtures()
 	}
@@ -52,8 +55,8 @@ func TestKStatsInModule(t *testing.T) {
 
 func allKStatsFromFixtures() []*kstat.KStat {
 	var kstatData []*kstat.KStat
-	raw, err := os.Open("testdata/all.kstat")
 
+	raw, err := os.Open("testdata/all.kstat")
 	if err != nil {
 		log.Fatal(fmt.Sprintf("Could not load serialized data from disk: %v\n", err))
 	}
