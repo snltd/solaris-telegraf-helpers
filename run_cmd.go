@@ -13,7 +13,7 @@ var RunCmd = func(cmd string) string {
 
 	var c *exec.Cmd
 
-	if len(chunks) == 2 {
+	if len(chunks) == 2 { //nolint
 		c = exec.Command(chunks[0], strings.Split(chunks[1], " ")...)
 	} else {
 		c = exec.Command(chunks[0])
@@ -25,7 +25,7 @@ var RunCmd = func(cmd string) string {
 }
 
 // RunCmdPfexec runs a command via pfexec(1), returning its output as a string. Same caveats as
-// RunCmd()
+// RunCmd().
 func RunCmdPfexec(cmd string) string {
 	return RunCmd("pfexec " + cmd)
 }

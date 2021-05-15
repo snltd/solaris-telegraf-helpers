@@ -1,11 +1,14 @@
 package solaris_telegraf_helpers
 
 import (
-	"github.com/stretchr/testify/assert"
 	"testing"
+
+	"github.com/stretchr/testify/require"
 )
 
 func TestBytify(t *testing.T) {
+	t.Parallel()
+
 	tables := []struct {
 		in  string
 		out float64
@@ -23,11 +26,13 @@ func TestBytify(t *testing.T) {
 
 	for _, table := range tables {
 		result, _ := Bytify(table.in)
-		assert.Equal(t, table.out, result)
+		require.Equal(t, table.out, result)
 	}
 }
 
 func TestBytifyI(t *testing.T) {
+	t.Parallel()
+
 	tables := []struct {
 		in  string
 		out float64
@@ -44,6 +49,6 @@ func TestBytifyI(t *testing.T) {
 
 	for _, table := range tables {
 		result, _ := BytifyI(table.in)
-		assert.Equal(t, table.out, result)
+		require.Equal(t, table.out, result)
 	}
 }

@@ -2,10 +2,7 @@
 // Mostly wrapper methods to make life a little simpler.
 package solaris_telegraf_helpers
 
-import ()
-
 func WeWant(want string, have []string) bool {
-
 	if len(have) == 0 {
 		return true
 	}

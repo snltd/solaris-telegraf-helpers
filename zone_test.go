@@ -1,29 +1,36 @@
 package solaris_telegraf_helpers
 
 import (
-	"github.com/stretchr/testify/assert"
 	"testing"
+
+	"github.com/stretchr/testify/require"
 )
 
 func TestZoneMapNames(t *testing.T) {
+	t.Parallel()
+
 	zoneMap := ParseZones(zoneadmOutput)
-	assert.ElementsMatch(t, []string{"global", "cube-media", "cube-ws"}, zoneMap.Names())
+	require.ElementsMatch(t, []string{"global", "cube-media", "cube-ws"}, zoneMap.Names())
 }
 
 func TestZoneMapRunning(t *testing.T) {
+	t.Parallel()
+
 	zoneMap := ParseZones(zoneadmOutput)
-	assert.ElementsMatch(t, []string{"global", "cube-media"}, zoneMap.InState("running"))
-	assert.ElementsMatch(t, []string{"cube-ws"}, zoneMap.InState("installed"))
-	assert.ElementsMatch(t, []string{}, zoneMap.InState("configured"))
+	require.ElementsMatch(t, []string{"global", "cube-media"}, zoneMap.InState("running"))
+	require.ElementsMatch(t, []string{"cube-ws"}, zoneMap.InState("installed"))
+	require.ElementsMatch(t, []string{}, zoneMap.InState("configured"))
 }
 
 func TestParseZone(t *testing.T) {
-	result, err := parseZone("0:global:running:/::ipkg:shared:0")
-	assert.Nil(t, err)
+	t.Parallel()
 
-	assert.Equal(
+	result, err := parseZone("0:global:running:/::ipkg:shared:0")
+	require.Nil(t, err)
+
+	require.Equal(
 		t,
-		zone{0, "global", "running", "/", "", "ipkg", "shared", 0},
+		Zone{0, "global", "running", "/", "", "ipkg", "shared", 0},
 		result,
 	)
 
@@ -31,10 +38,10 @@ func TestParseZone(t *testing.T) {
 		"42:mz1:running:/zones/mz1:c624d04f-d0d9-e1e6-822e-acebc78ec9ff:lipkg:excl:128",
 	)
 
-	assert.Nil(t, err)
-	assert.Equal(
+	require.Nil(t, err)
+	require.Equal(
 		t,
-		zone{
+		Zone{
 			42,
 			"mz1",
 			"running",
@@ -48,16 +55,19 @@ func TestParseZone(t *testing.T) {
 	)
 
 	result, err = parseZone("some:random:string")
-	assert.Equal(t, zone{}, result)
-	assert.Error(t, err)
+
+	require.Equal(t, Zone{}, result)
+	require.Error(t, err)
 }
 
 func TestParseZones(t *testing.T) {
-	assert.Equal(
+	t.Parallel()
+
+	require.Equal(
 		t,
 		ZoneMap{
-			"global": zone{0, "global", "running", "/", "", "ipkg", "shared", 0},
-			"cube-media": zone{
+			"global": Zone{0, "global", "running", "/", "", "ipkg", "shared", 0},
+			"cube-media": Zone{
 				42,
 				"cube-media",
 				"running",
@@ -67,7 +77,7 @@ func TestParseZones(t *testing.T) {
 				"excl",
 				128,
 			},
-			"cube-ws": zone{
+			"cube-ws": Zone{
 				44,
 				"cube-ws",
 				"installed",
@@ -83,35 +93,39 @@ func TestParseZones(t *testing.T) {
 }
 
 func TestZoneByID(t *testing.T) {
+	t.Parallel()
+
 	zoneMap := ParseZones(zoneadmOutput)
-	assert.ElementsMatch(t, []string{"global", "cube-media", "cube-ws"}, zoneMap.Names())
+	require.ElementsMatch(t, []string{"global", "cube-media", "cube-ws"}, zoneMap.Names())
 
 	zoneData, err := zoneMap.ZoneByID(42)
 
-	assert.Nil(t, err)
-	assert.Equal(
+	require.Nil(t, err)
+	require.Equal(
 		t,
-		zone{
+		Zone{
 			ID:      42,
 			Name:    "cube-media",
 			Status:  "running",
 			Path:    "/zones/cube-media",
-			Uuid:    "c624d04f-d0d9-e1e6-822e-acebc78ec9ff",
+			UUID:    "c624d04f-d0d9-e1e6-822e-acebc78ec9ff",
 			Brand:   "lipkg",
-			IpType:  "excl",
+			IPType:  "excl",
 			DebugID: 128,
 		},
 		zoneData)
 
-	zoneData, err = zoneMap.ZoneByID(101)
-	assert.Error(t, err)
+	_, err = zoneMap.ZoneByID(101)
+	require.Error(t, err)
 }
 
 func TestParseZoneVnics(t *testing.T) {
-	assert.Equal(
+	t.Parallel()
+
+	require.Equal(
 		t,
 		ZoneVnicMap{
-			"www_records0": vnic{
+			"www_records0": Vnic{
 				Name:  "www_records0",
 				Zone:  "cube-www-records",
 				Link:  "rge0",
@@ -123,9 +137,11 @@ func TestParseZoneVnics(t *testing.T) {
 }
 
 func TestParseZoneVnic(t *testing.T) {
-	assert.Equal(
+	t.Parallel()
+
+	require.Equal(
 		t,
-		vnic{
+		Vnic{
 			Name:  "www_records0",
 			Zone:  "cube-www-records",
 			Link:  "rge0",
