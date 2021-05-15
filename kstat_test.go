@@ -8,7 +8,7 @@ import (
 	"testing"
 
 	"github.com/illumos/go-kstat"
-	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestKStatsInClass(t *testing.T) {
@@ -24,9 +24,9 @@ func TestKStatsInClass(t *testing.T) {
 		statNames = append(statNames, stat.Name)
 	}
 
-	assert.Equal(t, []string{"fm_ereport_queue", "gcpu_mca_queue"}, statNames)
+	require.Equal(t, []string{"fm_ereport_queue", "gcpu_mca_queue"}, statNames)
 
-	assert.Equal(
+	require.Equal(
 		t,
 		[]*kstat.KStat(nil),
 		KStatsInClass(&kstat.Token{}, "no_such_thing"),
@@ -41,12 +41,12 @@ func TestKStatsInModule(t *testing.T) {
 	}
 
 	for _, stat := range KStatsInModule(&kstat.Token{}, "cpu") {
-		assert.Equal(t, "cpu", stat.Module)
+		require.Equal(t, "cpu", stat.Module)
 	}
 
-	assert.Equal(t, 12, len(KStatsInModule(&kstat.Token{}, "cpu")))
+	require.Equal(t, 12, len(KStatsInModule(&kstat.Token{}, "cpu")))
 
-	assert.Equal(
+	require.Equal(
 		t,
 		[]*kstat.KStat(nil),
 		KStatsInModule(&kstat.Token{}, "no_such_thing"),

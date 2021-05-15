@@ -3,7 +3,7 @@ package solaris_telegraf_helpers
 import (
 	"testing"
 
-	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestBytify(t *testing.T) {
@@ -26,7 +26,7 @@ func TestBytify(t *testing.T) {
 
 	for _, table := range tables {
 		result, _ := Bytify(table.in)
-		assert.Equal(t, table.out, result)
+		require.Equal(t, table.out, result)
 	}
 }
 
@@ -49,6 +49,6 @@ func TestBytifyI(t *testing.T) {
 
 	for _, table := range tables {
 		result, _ := BytifyI(table.in)
-		assert.Equal(t, table.out, result)
+		require.Equal(t, table.out, result)
 	}
 }
