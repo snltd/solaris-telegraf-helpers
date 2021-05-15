@@ -7,7 +7,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/siebenmann/go-kstat"
+	"github.com/illumos/go-kstat"
 	"github.com/stretchr/testify/assert"
 )
 

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/siebenmann/go-kstat"
+	"github.com/illumos/go-kstat"
 )
 
 // pulled out into a function to facilitate testing.

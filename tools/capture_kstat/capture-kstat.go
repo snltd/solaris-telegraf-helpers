@@ -13,7 +13,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/siebenmann/go-kstat"
+	"github.com/illumos/go-kstat"
 )
 
 func main() {

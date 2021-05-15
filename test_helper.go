@@ -7,7 +7,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/siebenmann/go-kstat"
+	"github.com/illumos/go-kstat"
 )
 
 // FromFixture loads serialized kstat data off disk and returns the real data. The filename is
